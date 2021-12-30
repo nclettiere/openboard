@@ -6,7 +6,7 @@ android {
     compileSdkVersion 31
 
     defaultConfig {
-        applicationId "org.dslul.openboard.inputmethod.latin"
+        applicationId "com.bondiola.nicoliniboard.inputmethod.latin"
         minSdkVersion 19
         targetSdkVersion 31
         versionCode 15
