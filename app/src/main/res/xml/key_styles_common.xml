@@ -99,6 +99,12 @@
         latin:keyboardLayout="@xml/key_styles_enter" />
     <!-- TODO: Currently there is no way to specify icon alignment per theme. -->
     <key-style
+        latin:styleName="mediaKeyStyle"
+        latin:keySpec="!icon/media_normal_key|!code/key_media"
+        latin:keyLabelFlags="keepBackgroundAspectRatio"
+        latin:keyActionFlags="noKeyPreview"
+        latin:backgroundType="functional" />
+    <key-style
         latin:styleName="spaceKeyStyle"
         latin:keySpec="!icon/space_key|!code/key_space"
         latin:backgroundType="spacebar"

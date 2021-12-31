@@ -53,8 +53,11 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
 
     private InputView mCurrentInputView;
     private View mMainKeyboardFrame;
+    private View mCompactMediaView;
+    private View mSuggestionsStripView;
     private MainKeyboardView mKeyboardView;
-    private MediaPalettesView mEmojiPalettesView;
+    private EmojiPalettesView mEmojiPalettesView;
+    private MediaPalettesView mMediaPalettesView;
     private LatinIME mLatinIME;
     private RichInputMethodManager mRichImm;
     private boolean mIsHardwareAcceleratedDrawingEnabled;
@@ -281,6 +284,8 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
     private void setMainKeyboardFrame(
             @Nonnull final SettingsValues settingsValues,
             @Nonnull final KeyboardSwitchState toggleState) {
+
+        mCompactMediaView.setVisibility(View.GONE);
         final int visibility =  isImeSuppressedByHardwareKeyboard(settingsValues, toggleState)
                 ? View.GONE : View.VISIBLE;
         mKeyboardView.setVisibility(visibility);
@@ -289,6 +294,8 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         // @see LatinIME#onComputeInset(android.inputmethodservice.InputMethodService.Insets)
         mMainKeyboardFrame.setVisibility(visibility);
         mEmojiPalettesView.setVisibility(View.GONE);
+        mMediaPalettesView.setVisibility(View.GONE);
+        mSuggestionsStripView.setVisibility(View.VISIBLE);
         mEmojiPalettesView.stopEmojiPalettes();
     }
 
@@ -304,16 +311,52 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         // @see #getVisibleKeyboardView() and
         // @see LatinIME#onComputeInset(android.inputmethodservice.InputMethodService.Insets)
         mKeyboardView.setVisibility(View.GONE);
+        mCompactMediaView.setVisibility(View.GONE);
         mEmojiPalettesView.startEmojiPalettes(
                 mKeyboardTextsSet.getText(KeyboardTextsSet.SWITCH_TO_ALPHA_KEY_LABEL),
                 mKeyboardView.getKeyVisualAttribute(), keyboard.mIconsSet);
         mEmojiPalettesView.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void setMediaKeyboard() {
+        if (DEBUG_ACTION) {
+            Log.d(TAG, "setEmojiKeyboard");
+        }
+        final Keyboard keyboard = mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET);
+
+        mMainKeyboardFrame.setVisibility(View.GONE);
+
+        mMediaPalettesView.startMediaPalettes(
+                this,
+                mKeyboardTextsSet.getText(KeyboardTextsSet.SWITCH_TO_ALPHA_KEY_LABEL),
+                mKeyboardView.getKeyVisualAttribute(), keyboard.mIconsSet);
+        mMediaPalettesView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setMediaKeyboardWithKeyboard() {
+        if (DEBUG_ACTION) {
+            Log.d(TAG, "setEmojiKeyboard");
+        }
+        final Keyboard keyboard = mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET);
+
+        // The visibility of {@link #mKeyboardView} must be aligned with {@link #MainKeyboardFrame}.
+        // @see #getVisibleKeyboardView() and
+        // @see LatinIME#onComputeInset(android.inputmethodservice.InputMethodService.Insets)
+        mMainKeyboardFrame.setVisibility(View.VISIBLE);
+        mCompactMediaView.setVisibility(View.VISIBLE);
+        mEmojiPalettesView.setVisibility(View.GONE);
+        mMediaPalettesView.setVisibility(View.GONE);
+        mSuggestionsStripView.setVisibility(View.GONE);
+        mEmojiPalettesView.stopEmojiPalettes();
+    }
+
     public enum KeyboardSwitchState {
         HIDDEN(-1),
         SYMBOLS_SHIFTED(KeyboardId.ELEMENT_SYMBOLS_SHIFTED),
         EMOJI(KeyboardId.ELEMENT_EMOJI_RECENTS),
+        MEDIA(KeyboardId.ELEMENT_MEDIA),
         OTHER(-1);
 
         final int mKeyboardId;
@@ -350,9 +393,16 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
             mLatinIME.startShowingInputView(true);
             if (toggleState == KeyboardSwitchState.EMOJI) {
                 setEmojiKeyboard();
-            } else {
+            }
+            else if(toggleState == KeyboardSwitchState.MEDIA) {
+                Log.d(TAG, "onToggleKeyboard: MEDIA KEY SELECTED");
+                //setEmojiKeyboard();
+            }
+            else {
                 mEmojiPalettesView.stopEmojiPalettes();
                 mEmojiPalettesView.setVisibility(View.GONE);
+
+                mMediaPalettesView.setVisibility(View.GONE);
 
                 mMainKeyboardFrame.setVisibility(View.VISIBLE);
                 mKeyboardView.setVisibility(View.VISIBLE);
@@ -431,6 +481,10 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         return mEmojiPalettesView != null && mEmojiPalettesView.isShown();
     }
 
+    public boolean isShowingMediaPalettes() {
+        return mMediaPalettesView != null && mMediaPalettesView.isShown();
+    }
+
     public boolean isShowingMoreKeysPanel() {
         if (isShowingEmojiPalettes()) {
             return false;
@@ -442,6 +496,9 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         if (isShowingEmojiPalettes()) {
             return mEmojiPalettesView;
         }
+        if (isShowingMediaPalettes()) {
+            return mMediaPalettesView;
+        }
         return mKeyboardView;
     }
 
@@ -449,6 +506,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         return mKeyboardView;
     }
 
+    // TODO : Mosnye - Deallocate media memory
     public void deallocateMemory() {
         if (mKeyboardView != null) {
             mKeyboardView.cancelAllOngoingEvents();
@@ -469,8 +527,13 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         mCurrentInputView = (InputView)LayoutInflater.from(mThemeContext).inflate(
                 R.layout.input_view, null);
         mMainKeyboardFrame = mCurrentInputView.findViewById(R.id.main_keyboard_frame);
+        mCompactMediaView = mMainKeyboardFrame.findViewById(R.id.compact_media_view);
+        mSuggestionsStripView = mMainKeyboardFrame.findViewById(R.id.suggestion_strip_view);
         mEmojiPalettesView = mCurrentInputView.findViewById(
                 R.id.emoji_palettes_view);
+
+        mMediaPalettesView = mCurrentInputView.findViewById(
+                R.id.media_palettes_view);
 
         mKeyboardView = mCurrentInputView.findViewById(R.id.keyboard_view);
         mKeyboardView.setHardwareAcceleratedDrawingEnabled(isHardwareAcceleratedDrawingEnabled);
@@ -478,6 +541,11 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         mEmojiPalettesView.setHardwareAcceleratedDrawingEnabled(
                 isHardwareAcceleratedDrawingEnabled);
         mEmojiPalettesView.setKeyboardActionListener(mLatinIME);
+
+        //mMediaPalettesView.setHardwareAcceleratedDrawingEnabled(
+        //        isHardwareAcceleratedDrawingEnabled);
+        //mMediaPalettesView.setKeyboardActionListener(mLatinIME);
+
         return mCurrentInputView;
     }
 

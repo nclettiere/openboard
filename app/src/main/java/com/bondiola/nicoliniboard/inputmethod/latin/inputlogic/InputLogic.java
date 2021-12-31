@@ -691,6 +691,10 @@ public final class InputLogic {
                 // Note: Switching emoji keyboard is being handled in
                 // {@link KeyboardState#onEvent(Event,int)}.
                 break;
+            case Constants.CODE_MEDIA:
+                // Note: Switching media keyboard is being handled in
+                // {@link KeyboardState#onEvent(Event,int)}.
+                break;
             case Constants.CODE_ALPHA_FROM_EMOJI:
                 // Note: Switching back from Emoji keyboard to the main keyboard is being
                 // handled in {@link KeyboardState#onEvent(Event,int)}.

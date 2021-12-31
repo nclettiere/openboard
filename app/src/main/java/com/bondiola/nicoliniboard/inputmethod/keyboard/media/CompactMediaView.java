@@ -11,6 +11,9 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,7 +35,7 @@ import com.bondiola.nicoliniboard.inputmethod.keyboard.emoji.OnKeyEventListener;
 import com.bondiola.nicoliniboard.inputmethod.latin.common.Constants;
 
 @SuppressWarnings("deprecation")
-public final class MediaPalettesView extends LinearLayout
+public final class CompactMediaView extends LinearLayout
         implements OnTabChangeListener, View.OnClickListener, View.OnTouchListener,OnKeyEventListener
 {
 
@@ -40,15 +43,19 @@ public final class MediaPalettesView extends LinearLayout
     private final MediaLayoutParams mMediaLayoutParams;
     private final Context context;
     private KeyboardSwitcher mSwitcher;
-    private ImageButton mSearchButton;
+    private EditText mSearchBox;
 
-    public MediaPalettesView(Context context, @Nullable AttributeSet attrs) {
+    public CompactMediaView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, R.attr.emojiPalettesViewStyle);
     }
 
-    public MediaPalettesView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CompactMediaView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        final LayoutInflater inflater = LayoutInflater.from(context);
+        inflater.inflate(R.layout.compact_media_view, this);
         this.context = context;
+
         final Resources res = context.getResources();
         mMediaLayoutParams = new MediaLayoutParams(res);
         @SuppressLint("CustomViewStyleable")
@@ -56,8 +63,7 @@ public final class MediaPalettesView extends LinearLayout
                 R.styleable.KeyboardView, defStyleAttr, R.style.KeyboardView);
         final int keyBackgroundId = keyboardViewAttr.getResourceId(
                 R.styleable.KeyboardView_keyBackground, 0);
-        mFunctionalKeyBackgroundId = keyboardViewAttr.getResourceId(
-                R.styleable.KeyboardView_functionalKeyBackground, keyBackgroundId);
+        mFunctionalKeyBackgroundId = keyboardViewAttr.getResourceId(R.styleable.KeyboardView_functionalKeyBackground, keyBackgroundId);
     }
 
     @Override
@@ -89,20 +95,15 @@ public final class MediaPalettesView extends LinearLayout
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mSearchButton = findViewById(R.id.media_keyboard_alphabet_left);
-        mSearchButton.setBackgroundResource(mFunctionalKeyBackgroundId);
-        mSearchButton.setTag(Constants.CODE_MEDIA);
-
-        //mSearchButton.setOnTouchListener((view, motionEvent) -> {
-        //    mSwitcher.setMediaKeyboardWithKeyboard();
-        //    return true;
-        //});
-
-        mSearchButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                mSwitcher.setMediaKeyboardWithKeyboard();
-            }
-        });
+        mSearchBox = findViewById(R.id.compact_search_edittext);
+        mSearchBox.setBackgroundResource(mFunctionalKeyBackgroundId);
+        mSearchBox.setOnClickListener(this);
+        mSearchBox.setOnTouchListener(this);
+        mSearchBox.setFocusable(true);
+        mSearchBox.setFocusableInTouchMode(true);
+        mSearchBox.requestFocus();
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(mSearchBox, InputMethodManager.SHOW_IMPLICIT);
     }
 
     public void setHardwareAcceleratedDrawingEnabled(final boolean enabled) {
@@ -126,7 +127,7 @@ public final class MediaPalettesView extends LinearLayout
             final KeyboardIconsSet iconSet) {
         mSwitcher = switcher;
         final KeyDrawParams params = new KeyDrawParams();
-        params.updateParams(mMediaLayoutParams.getActionBarHeight(), keyVisualAttr);
+        //params.updateParams(mMediaLayoutParams.getActionBarHeight(), keyVisualAttr);
         //setupAlphabetKey(mAlphabetKeyLeft, switchToAlphaLabel, params);
     }
 }

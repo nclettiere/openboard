@@ -26,6 +26,15 @@
     android:orientation="vertical" >
 
     <!-- To ensure that key preview popup is correctly placed when the current system locale is
+     one of RTL locales, layoutDirection="ltr" is needed in the SDK version 17+. -->
+    <com.bondiola.nicoliniboard.inputmethod.keyboard.media.CompactMediaView
+        android:id="@+id/compact_media_view"
+        android:layoutDirection="ltr"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/config_compact_media_height"
+        android:visibility="gone"/>
+
+    <!-- To ensure that key preview popup is correctly placed when the current system locale is
          one of RTL locales, layoutDirection="ltr" is needed in the SDK version 17+. -->
     <com.bondiola.nicoliniboard.inputmethod.latin.suggestions.SuggestionStripView
         android:id="@+id/suggestion_strip_view"

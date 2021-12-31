@@ -52,6 +52,7 @@ public final class KeyboardCodesSet {
         "key_language_switch",
         "key_emoji",
         "key_alpha_from_emoji",
+        "key_media",
         "key_unspecified",
     };
 
@@ -72,6 +73,7 @@ public final class KeyboardCodesSet {
         Constants.CODE_LANGUAGE_SWITCH,
         Constants.CODE_EMOJI,
         Constants.CODE_ALPHA_FROM_EMOJI,
+        Constants.CODE_MEDIA,
         Constants.CODE_UNSPECIFIED,
     };
 

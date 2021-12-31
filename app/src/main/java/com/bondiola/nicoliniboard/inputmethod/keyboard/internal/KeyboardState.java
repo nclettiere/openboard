@@ -50,6 +50,8 @@ public final class KeyboardState {
         void setAlphabetShiftLockedKeyboard();
         void setAlphabetShiftLockShiftedKeyboard();
         void setEmojiKeyboard();
+        void setMediaKeyboard();
+        void setMediaKeyboardWithKeyboard();
         void setSymbolsKeyboard();
         void setSymbolsShiftedKeyboard();
 
@@ -85,6 +87,7 @@ public final class KeyboardState {
     // symbols, and emoji mode.
     private boolean mIsAlphabetMode;
     private boolean mIsEmojiMode;
+    private boolean mIsMediaMode;
     private AlphabetShiftState mAlphabetShiftState = new AlphabetShiftState();
     private boolean mIsSymbolShifted;
     private boolean mPrevMainKeyboardWasShiftLocked;
@@ -102,6 +105,7 @@ public final class KeyboardState {
         public boolean mIsAlphabetMode;
         public boolean mIsAlphabetShiftLocked;
         public boolean mIsEmojiMode;
+        public boolean mIsMediaMode;
         public int mShiftMode;
 
         @Override
@@ -115,6 +119,9 @@ public final class KeyboardState {
             }
             if (mIsEmojiMode) {
                 return "EMOJI";
+            }
+            if (mIsMediaMode) {
+                return "MEDIA";
             }
             return "SYMBOLS_" + shiftModeToString(mShiftMode);
         }
@@ -154,6 +161,7 @@ public final class KeyboardState {
         final SavedKeyboardState state = mSavedKeyboardState;
         state.mIsAlphabetMode = mIsAlphabetMode;
         state.mIsEmojiMode = mIsEmojiMode;
+        state.mIsMediaMode = mIsMediaMode;
         if (mIsAlphabetMode) {
             state.mIsAlphabetShiftLocked = mAlphabetShiftState.isShiftLocked();
             state.mShiftMode = mAlphabetShiftState.isAutomaticShifted() ? AUTOMATIC_SHIFT
@@ -185,6 +193,10 @@ public final class KeyboardState {
         }
         if (state.mIsEmojiMode) {
             setEmojiKeyboard();
+            return;
+        }
+        if (state.mIsMediaMode) {
+            setMediaKeyboard();
             return;
         }
         // Symbol mode
@@ -305,6 +317,7 @@ public final class KeyboardState {
         mSwitchActions.setAlphabetKeyboard();
         mIsAlphabetMode = true;
         mIsEmojiMode = false;
+        mIsMediaMode = false;
         mIsSymbolShifted = false;
         mRecapitalizeMode = RecapitalizeStatus.NOT_A_RECAPITALIZE_MODE;
         mSwitchState = SWITCH_STATE_ALPHA;
@@ -343,11 +356,26 @@ public final class KeyboardState {
         }
         mIsAlphabetMode = false;
         mIsEmojiMode = true;
+        mIsMediaMode = false;
         mRecapitalizeMode = RecapitalizeStatus.NOT_A_RECAPITALIZE_MODE;
         // Remember caps lock mode and reset alphabet shift state.
         mPrevMainKeyboardWasShiftLocked = mAlphabetShiftState.isShiftLocked();
         mAlphabetShiftState.setShiftLocked(false);
         mSwitchActions.setEmojiKeyboard();
+    }
+
+    private void setMediaKeyboard() {
+        if (DEBUG_INTERNAL_ACTION) {
+            Log.d(TAG, "setMediaKeyboard");
+        }
+        mIsAlphabetMode = false;
+        mIsEmojiMode = false;
+        mIsMediaMode = true;
+        mRecapitalizeMode = RecapitalizeStatus.NOT_A_RECAPITALIZE_MODE;
+        // Remember caps lock mode and reset alphabet shift state.
+        mPrevMainKeyboardWasShiftLocked = mAlphabetShiftState.isShiftLocked();
+        mAlphabetShiftState.setShiftLocked(false);
+        mSwitchActions.setMediaKeyboard();
     }
 
     public void onPressKey(final int code, final boolean isSinglePointer, final int autoCapsFlags,
@@ -644,7 +672,7 @@ public final class KeyboardState {
             }
             break;
         case SWITCH_STATE_SYMBOL_BEGIN:
-            if (mIsEmojiMode) {
+            if (mIsEmojiMode || mIsMediaMode) {
                 // When in the Emoji keyboard, we don't want to switch back to the main layout even
                 // after the user hits an emoji letter followed by an enter or a space.
                 break;
@@ -671,6 +699,8 @@ public final class KeyboardState {
             setEmojiKeyboard();
         } else if (code == Constants.CODE_ALPHA_FROM_EMOJI) {
             setAlphabetKeyboard(autoCapsFlags, recapitalizeMode);
+        } else if (code == Constants.CODE_MEDIA) {
+            setMediaKeyboard();
         }
     }
 

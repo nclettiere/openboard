@@ -70,6 +70,7 @@ public final class KeyboardId {
     public static final int ELEMENT_EMOJI_CATEGORY14 = 24;
     public static final int ELEMENT_EMOJI_CATEGORY15 = 25;
     public static final int ELEMENT_EMOJI_CATEGORY16 = 26;
+    public static final int ELEMENT_MEDIA = 27;
 
     public final RichInputMethodSubtype mSubtype;
     public final int mWidth;

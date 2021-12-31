@@ -240,145 +240,7 @@ public class Key implements Comparable<Key> {
 
         mHashCode = computeHashCode(this);
 
-        Log.d("Nicolino", String.valueOf(this.mIconId)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        );
+        Log.d("Nicolino", String.valueOf(this.mIconId));
     }
 
     /**
@@ -621,20 +483,8 @@ public class Key implements Comparable<Key> {
                 disabledIconId, visualInsetsLeft, visualInsetsRight);
         mKeyVisualAttributes = KeyVisualAttributes.newInstance(keyAttr);
         mHashCode = computeHashCode(this);
-
-        if(mLabel != null) {
-            if (mLabel.equals(",")) {
-                //String x = style.getString(keyAttr, R.styleable.);
-                //if (x != null) {
-                //    Log.d("Nicolino", "More Key: " + x);
-                //}else {
-                //    Log.d("Nicolino", "Null more keys");
-                //}
-            }
-        }
     }
 
-    // NO
     /**
      * Copy constructor for DynamicGridKeyboard.GridKey.
      *
@@ -670,7 +520,6 @@ public class Key implements Comparable<Key> {
         mEnabled = key.mEnabled;
     }
 
-    /// NO
     private Key(@Nonnull final Key key, @Nullable final MoreKeySpec[] moreKeys) {
         // Final attributes.
         mCode = key.mCode;
