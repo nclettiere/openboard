@@ -21,6 +21,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.bondiola.nicoliniboard.inputmethod.keyboard.internal.KeyDrawParams;
 import com.bondiola.nicoliniboard.inputmethod.keyboard.internal.KeySpecParser;
@@ -36,6 +37,7 @@ import com.bondiola.nicoliniboard.inputmethod.latin.common.StringUtils;
 
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -237,6 +239,146 @@ public class Key implements Comparable<Key> {
         mKeyVisualAttributes = null;
 
         mHashCode = computeHashCode(this);
+
+        Log.d("Nicolino", String.valueOf(this.mIconId)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        );
     }
 
     /**
@@ -315,6 +457,7 @@ public class Key implements Comparable<Key> {
         mHashCode = computeHashCode(this);
     }
 
+    // Working
     /**
      * Create a key with the given top-left coordinate and extract its attributes from a key
      * specification string, Key attribute array, key style, and etc.
@@ -478,8 +621,20 @@ public class Key implements Comparable<Key> {
                 disabledIconId, visualInsetsLeft, visualInsetsRight);
         mKeyVisualAttributes = KeyVisualAttributes.newInstance(keyAttr);
         mHashCode = computeHashCode(this);
+
+        if(mLabel != null) {
+            if (mLabel.equals(",")) {
+                //String x = style.getString(keyAttr, R.styleable.);
+                //if (x != null) {
+                //    Log.d("Nicolino", "More Key: " + x);
+                //}else {
+                //    Log.d("Nicolino", "Null more keys");
+                //}
+            }
+        }
     }
 
+    // NO
     /**
      * Copy constructor for DynamicGridKeyboard.GridKey.
      *
@@ -515,6 +670,7 @@ public class Key implements Comparable<Key> {
         mEnabled = key.mEnabled;
     }
 
+    /// NO
     private Key(@Nonnull final Key key, @Nullable final MoreKeySpec[] moreKeys) {
         // Final attributes.
         mCode = key.mCode;

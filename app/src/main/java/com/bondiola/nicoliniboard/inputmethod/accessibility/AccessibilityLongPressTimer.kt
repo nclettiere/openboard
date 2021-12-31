@@ -3,6 +3,8 @@ package com.bondiola.nicoliniboard.inputmethod.accessibility
 import android.content.Context
 import android.os.Handler
 import android.os.Message
+import android.util.Log
+import com.bondiola.nicoliniboard.inputmethod.keyboard.Key
 import com.bondiola.nicoliniboard.inputmethod.latin.R
 
 // Handling long press timer to show a more keys keyboard.
@@ -15,9 +17,10 @@ internal class AccessibilityLongPressTimer(private val mCallback: com.bondiola.n
     private val mConfigAccessibilityLongPressTimeout: Long
     override fun handleMessage(msg: Message) {
         when (msg.what) {
-            com.bondiola.nicoliniboard.inputmethod.accessibility.AccessibilityLongPressTimer.Companion.MSG_LONG_PRESS -> {
+            MSG_LONG_PRESS -> {
+                Log.d("Nicolino", "startLongPress: with key: " + (msg.obj as Key).label)
                 cancelLongPress()
-                mCallback.performLongClickOn(msg.obj as com.bondiola.nicoliniboard.inputmethod.keyboard.Key)
+                mCallback.performLongClickOn(msg.obj as Key)
                 return
             }
             else -> {
@@ -27,14 +30,14 @@ internal class AccessibilityLongPressTimer(private val mCallback: com.bondiola.n
         }
     }
 
-    fun startLongPress(key: com.bondiola.nicoliniboard.inputmethod.keyboard.Key?) {
+    fun startLongPress(key: Key?) {
         cancelLongPress()
-        val longPressMessage = obtainMessage(com.bondiola.nicoliniboard.inputmethod.accessibility.AccessibilityLongPressTimer.Companion.MSG_LONG_PRESS, key)
+        val longPressMessage = obtainMessage(MSG_LONG_PRESS, key)
         sendMessageDelayed(longPressMessage, mConfigAccessibilityLongPressTimeout)
     }
 
     fun cancelLongPress() {
-        removeMessages(com.bondiola.nicoliniboard.inputmethod.accessibility.AccessibilityLongPressTimer.Companion.MSG_LONG_PRESS)
+        removeMessages(MSG_LONG_PRESS)
     }
 
     companion object {

@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
 import com.bondiola.nicoliniboard.inputmethod.keyboard.emoji.EmojiPalettesView;
+import com.bondiola.nicoliniboard.inputmethod.keyboard.media.MediaPalettesView;
 import com.bondiola.nicoliniboard.inputmethod.keyboard.internal.KeyboardState;
 import com.bondiola.nicoliniboard.inputmethod.keyboard.internal.KeyboardTextsSet;
 
@@ -53,7 +54,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
     private InputView mCurrentInputView;
     private View mMainKeyboardFrame;
     private MainKeyboardView mKeyboardView;
-    private EmojiPalettesView mEmojiPalettesView;
+    private MediaPalettesView mEmojiPalettesView;
     private LatinIME mLatinIME;
     private RichInputMethodManager mRichImm;
     private boolean mIsHardwareAcceleratedDrawingEnabled;

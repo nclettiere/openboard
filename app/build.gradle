@@ -23,6 +23,9 @@ android {
         }
     }
 
+    aaptOptions {
+        noCompress 'dict'
+    }
 
     externalNativeBuild {
         ndkBuild {
@@ -35,9 +38,6 @@ android {
     }
 
     ndkVersion '21.3.6528147'
-    androidResources {
-        noCompress 'dict'
-    }
 }
 
 dependencies {

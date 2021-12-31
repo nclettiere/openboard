@@ -36,8 +36,6 @@ public final class SettingsActivity extends PreferenceActivity
     public static final String EXTRA_ENTRY_VALUE_NOTICE_DIALOG = "important_notice";
     public static final String EXTRA_ENTRY_VALUE_SYSTEM_SETTINGS = "system_settings";
 
-    private boolean mShowHomeAsUp;
-
     @Override
     protected void onCreate(final Bundle savedState) {
         super.onCreate(savedState);

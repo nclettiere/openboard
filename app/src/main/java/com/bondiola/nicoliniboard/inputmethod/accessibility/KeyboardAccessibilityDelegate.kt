@@ -8,6 +8,7 @@ import android.view.accessibility.AccessibilityEvent
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
+import com.bondiola.nicoliniboard.inputmethod.keyboard.Key
 import com.bondiola.nicoliniboard.inputmethod.keyboard.KeyboardView
 
 /**
@@ -186,7 +187,7 @@ open class KeyboardAccessibilityDelegate<KV : com.bondiola.nicoliniboard.inputme
      *
      * @param key A key to be registered.
      */
-    open fun performClickOn(key: com.bondiola.nicoliniboard.inputmethod.keyboard.Key) {
+    open fun performClickOn(key: Key) {
         if (DEBUG_HOVER) {
             Log.d(TAG, "performClickOn: key=$key")
         }
