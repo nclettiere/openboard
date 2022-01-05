@@ -41,13 +41,14 @@
                 android:protectionLevel="signature" />
 
     <application android:label="@string/english_ime_name"
-            android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:supportsRtl="true"
-            android:allowBackup="true"
-            android:defaultToDeviceProtectedStorage="true"
-            android:directBootAware="true"
-            android:extractNativeLibs="false">
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:allowBackup="true"
+        android:defaultToDeviceProtectedStorage="true"
+        android:directBootAware="true"
+        android:extractNativeLibs="false"
+        android:windowSoftInputMode="stateVisible">
 
         <!-- Services -->
         <service android:name="com.bondiola.nicoliniboard.inputmethod.latin.LatinIME"

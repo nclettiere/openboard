@@ -21,12 +21,15 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
+import com.bondiola.nicoliniboard.inputmethod.keyboard.Keyboard;
 import com.bondiola.nicoliniboard.inputmethod.keyboard.KeyboardSwitcher;
+import com.bondiola.nicoliniboard.inputmethod.keyboard.MainKeyboardView;
 import com.bondiola.nicoliniboard.inputmethod.keyboard.internal.KeyDrawParams;
 import com.bondiola.nicoliniboard.inputmethod.keyboard.internal.KeyVisualAttributes;
 import com.bondiola.nicoliniboard.inputmethod.keyboard.internal.KeyboardIconsSet;
 import com.bondiola.nicoliniboard.inputmethod.latin.R;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
@@ -38,12 +41,12 @@ import com.bondiola.nicoliniboard.inputmethod.latin.common.Constants;
 public final class CompactMediaView extends LinearLayout
         implements OnTabChangeListener, View.OnClickListener, View.OnTouchListener,OnKeyEventListener
 {
-
+    public MainKeyboardView mKeyboardView;
+    public EditText mSearchBox;
     private final int mFunctionalKeyBackgroundId;
     private final MediaLayoutParams mMediaLayoutParams;
     private final Context context;
     private KeyboardSwitcher mSwitcher;
-    private EditText mSearchBox;
 
     public CompactMediaView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, R.attr.emojiPalettesViewStyle);
@@ -101,9 +104,26 @@ public final class CompactMediaView extends LinearLayout
         mSearchBox.setOnTouchListener(this);
         mSearchBox.setFocusable(true);
         mSearchBox.setFocusableInTouchMode(true);
-        mSearchBox.requestFocus();
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mSearchBox, InputMethodManager.SHOW_IMPLICIT);
+
+        //final Keyboard keyboard = getKeyboard();
+    }
+
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+
+        if(visibility == VISIBLE) {
+            mSearchBox.requestFocus();
+            showSoftKeyboard(mSearchBox);
+        }
+    }
+
+    public void showSoftKeyboard(View view) {
+        if (view.requestFocus()) {
+            InputMethodManager imm = (InputMethodManager)
+                    context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+        }
     }
 
     public void setHardwareAcceleratedDrawingEnabled(final boolean enabled) {

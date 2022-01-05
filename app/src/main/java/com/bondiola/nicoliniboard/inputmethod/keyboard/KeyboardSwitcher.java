@@ -24,8 +24,10 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 
 import com.bondiola.nicoliniboard.inputmethod.keyboard.emoji.EmojiPalettesView;
+import com.bondiola.nicoliniboard.inputmethod.keyboard.media.CompactMediaView;
 import com.bondiola.nicoliniboard.inputmethod.keyboard.media.MediaPalettesView;
 import com.bondiola.nicoliniboard.inputmethod.keyboard.internal.KeyboardState;
 import com.bondiola.nicoliniboard.inputmethod.keyboard.internal.KeyboardTextsSet;
@@ -51,9 +53,10 @@ import javax.annotation.Nonnull;
 public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
     private static final String TAG = KeyboardSwitcher.class.getSimpleName();
 
+    public Context context;
     private InputView mCurrentInputView;
     private View mMainKeyboardFrame;
-    private View mCompactMediaView;
+    private CompactMediaView mCompactMediaView;
     private View mSuggestionsStripView;
     private MainKeyboardView mKeyboardView;
     private EmojiPalettesView mEmojiPalettesView;
@@ -344,12 +347,32 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         // The visibility of {@link #mKeyboardView} must be aligned with {@link #MainKeyboardFrame}.
         // @see #getVisibleKeyboardView() and
         // @see LatinIME#onComputeInset(android.inputmethodservice.InputMethodService.Insets)
+
+        hideSoftKeyboard();
+        mCompactMediaView.mKeyboardView = mKeyboardView;
         mMainKeyboardFrame.setVisibility(View.VISIBLE);
         mCompactMediaView.setVisibility(View.VISIBLE);
         mEmojiPalettesView.setVisibility(View.GONE);
         mMediaPalettesView.setVisibility(View.GONE);
         mSuggestionsStripView.setVisibility(View.GONE);
         mEmojiPalettesView.stopEmojiPalettes();
+    }
+
+    public void hideSoftKeyboard() {
+        //mLatinIME.hideWindow();
+        //mLatinIME.onFinishInput();
+        //mLatinIME.onCancelInput();
+        //View view = mLatinIME.getApplication()..getCurrentFocus();
+        InputMethodManager imm = (InputMethodManager) mLatinIME.getSystemService(Context.INPUT_METHOD_SERVICE);
+        //imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        imm.restartInput(mCompactMediaView.mSearchBox);
+        //if (view != null) {
+        //    view.clearFocus();
+//
+        //}else {
+        //    Log.d(TAG, "hideSoftKeyboard: View is NULL");
+        //}
+        //mLatinIME.startShowingInputView(true);
     }
 
     public enum KeyboardSwitchState {

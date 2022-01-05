@@ -602,6 +602,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         super();
         mSettings = Settings.getInstance();
         mKeyboardSwitcher = KeyboardSwitcher.getInstance();
+        mKeyboardSwitcher.context = this;
         mStatsUtilsManager = StatsUtilsManager.getInstance();
         mIsHardwareAcceleratedDrawingEnabled = this.enableHardwareAcceleration();
         Log.i(TAG, "Hardware accelerated drawing: " + mIsHardwareAcceleratedDrawingEnabled);
@@ -774,6 +775,10 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         unregisterReceiver(mDictionaryDumpBroadcastReceiver);
         unregisterReceiver(mRingerModeChangeReceiver);
         unregisterReceiver(mRestartAfterDeviceUnlockReceiver);
+        mInputLogic.recycle();
+    }
+
+    public void recycleNow() {
         mInputLogic.recycle();
     }
 
